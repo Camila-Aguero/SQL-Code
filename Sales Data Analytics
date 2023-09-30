@@ -1,0 +1,25 @@
+-- Analyzing Sales Data by Month and Country
+
+-- This query extracts and manipulates sales data to focus on sales by month and country.
+-- It converts the OrderDateKey to a character type for month and year extraction and filters the data
+-- to include only sales in Australia and the United States during the year 2013.
+
+-- Analyzing Sales Data by Month and Country
+
+-- This query extracts and manipulates sales data to focus on sales by month and country.
+-- It converts the OrderDateKey to a character type for month and year extraction and filters the data
+-- to include only sales in Australia and the United States during the year 2013.
+
+SELECT
+    FORMAT(CONVERT(DATETIME, SUBSTRING(CAST([OrderDateKey] AS CHAR), 1, 4) + '-' + SUBSTRING(CAST([OrderDateKey] AS CHAR), 5, 2) + '-01'), 'yyyy/MM') AS MonthYear, -- Formats YYYYMM as YYYY/MM
+    [SalesOrderNumber] AS OrderNumber, -- Unique identifier of the sales order
+    CAST([OrderDate] AS DATE) AS OrderDate, -- Date of the sales order with time removed
+    ST.SalesTerritoryCountry AS Country -- Country of the sales territory
+FROM
+    [AdventureWorksDW2019].[dbo].[FactInternetSales] SalesData
+JOIN
+    [AdventureWorksDW2019].[dbo].DimSalesTerritory ST
+ON
+    SalesData.SalesTerritoryKey = ST.SalesTerritoryKey
+WHERE
+    ST.SalesTerritoryCountry IN ('Australia', 'United States')
